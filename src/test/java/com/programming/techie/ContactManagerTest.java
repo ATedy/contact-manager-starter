@@ -4,7 +4,13 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 // By instanciating the test here we don't need to say static in the Before and AfterAll tests.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -135,11 +141,48 @@ class ContactManagerTest {
    }
 
 
-   // Parameterized  Tests
-   @DisplayName("Repeat Contact Creation 5 Times")
+   // Parameterized  Tests using valuseSource
+   @DisplayName("Value Source Case - Phone Number should match the required Format ")
    @ParameterizedTest
    @ValueSource(strings = {"0123456789", "0123456789", "0123456789"})
    public void shouldTestContactCreationUsingValueSource(String phoneNumber) {
+      contactManager.addContact("John", "Doe", phoneNumber);
+      Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+      Assertions.assertEquals(1, contactManager.getAllContacts().size());
+   }
+
+
+   // Parameterized  Tests using valuseSource
+   @DisplayName("Method Source Case - Phone Number should match the required Format ")
+   @ParameterizedTest
+   @MethodSource("phoneNumberList")
+   @ValueSource(strings = {"0123456789", "0123456789", "0123456789"})
+   public void shouldTestContactCreationUsingMethodSource(String phoneNumber) {
+      contactManager.addContact("John", "Doe", phoneNumber);
+      Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+      Assertions.assertEquals(1, contactManager.getAllContacts().size());
+   }
+
+   private  static List<String> phoneNumberList() {
+      return Arrays.asList("0123456789", "0123456789", "0123456789");
+   }
+
+   // Parameterized  Tests using CSV format
+   @DisplayName("CSV Source Case - Phone Number should match the required Format ")
+   @ParameterizedTest
+   @MethodSource("phoneNumberList")
+   @CsvSource({"0123456789", "0123456789", "0123456789"})
+   public void shouldTestContactCreationUsingCSVSource(String phoneNumber) {
+      contactManager.addContact("John", "Doe", phoneNumber);
+      Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+      Assertions.assertEquals(1, contactManager.getAllContacts().size());
+   }
+
+   // Parameterized  Tests using CSV file
+   @DisplayName("CSV FileSource Case - Phone Number should match the required Format ")
+   @ParameterizedTest
+   @CsvFileSource(resources = "/data.csv")
+   public void shouldTestContactCreationUsingCSVFileSource(String phoneNumber) {
       contactManager.addContact("John", "Doe", phoneNumber);
       Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
       Assertions.assertEquals(1, contactManager.getAllContacts().size());
