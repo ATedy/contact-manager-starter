@@ -3,6 +3,8 @@ package com.programming.techie;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.function.BooleanSupplier;
+
 class ContactManagerTest {
    @Test
    public void shouldCreateContact() {
@@ -11,5 +13,10 @@ class ContactManagerTest {
       //      using assertions we are checking the values are present or not
       Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
       Assertions.assertEquals(1,contactManager.getAllContacts().size());
+      Assertions.assertTrue((BooleanSupplier) contactManager.getAllContacts().stream()
+              .filter(contact -> contact.getFirstName().equals("John") &&
+                      contact.getLastName().equals("Doe") &&
+                      contact.getPhoneNumber().equals("0123456789")));
+
    }
 }
