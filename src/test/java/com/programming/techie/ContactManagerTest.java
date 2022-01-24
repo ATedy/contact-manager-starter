@@ -3,6 +3,8 @@ package com.programming.techie;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 // By instanciating the test here we don't need to say static in the Before and AfterAll tests.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -122,14 +124,25 @@ class ContactManagerTest {
 
    }
 
-
+// Repeated Tests
    @DisplayName("Repeat Contact Creation 5 Times")
    @RepeatedTest(value = 5,
    name = "Repeating Contact Creation Test {currentRepetition} of {totalRepetitions}")
-
    public void shouldTestContactCreationRepeatedly() {
       contactManager.addContact("John", "Doe", "0123456789");
       Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
       Assertions.assertEquals(1, contactManager.getAllContacts().size());
    }
+
+
+   // Parameterized  Tests
+   @DisplayName("Repeat Contact Creation 5 Times")
+   @ParameterizedTest
+   @ValueSource(strings = {"0123456789", "0123456789", "0123456789"})
+   public void shouldTestContactCreationUsingValueSource(String phoneNumber) {
+      contactManager.addContact("John", "Doe", phoneNumber);
+      Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+      Assertions.assertEquals(1, contactManager.getAllContacts().size());
+   }
+
 }
