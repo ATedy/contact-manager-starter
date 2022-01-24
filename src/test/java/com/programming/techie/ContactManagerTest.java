@@ -72,6 +72,7 @@ class ContactManagerTest {
       System.out.println("Should be executed at the end of the Test");
    }
 
+   // Enabling and disabling test based on OS types added
    @Test
    @DisplayName("Should not Create Contact Only on MAC OS")
    @EnabledOnOs(value = OS.MAC, disabledReason = "Enabled only on MAC")
@@ -93,6 +94,22 @@ class ContactManagerTest {
    @DisplayName("Should not Create Contact Only on MAC OS")
    @EnabledOnOs(value = OS.WINDOWS, disabledReason = "Enabled only on Windows OS")
    public void shouldCreateContactOnlyOnWindows() {
+      contactManager.addContact("John", "Doe", "0123456789");
+      Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+      Assertions.assertEquals(1,contactManager.getAllContacts().size());
+      Assertions.assertTrue(contactManager.getAllContacts().stream()
+              .filter(contact -> contact.getFirstName().equals("John") &&
+                      contact.getLastName().equals("Doe") &&
+                      contact.getPhoneNumber().equals("0123456789"))
+              .findAny()
+              .isPresent());
+
+   }
+
+   @Test
+   @DisplayName("Test Contact Creation on Developer Machine")
+   public void shouldTestContactCreationOnDev() {
+      Assumptions.assumeTrue("Test".equals(System.getProperty("ENV")));
       contactManager.addContact("John", "Doe", "0123456789");
       Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
       Assertions.assertEquals(1,contactManager.getAllContacts().size());
