@@ -1,6 +1,8 @@
 package com.programming.techie;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 // By instanciating the test here we don't need to say static in the Before and AfterAll tests.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -68,5 +70,38 @@ class ContactManagerTest {
    @AfterAll
    public void tearDownAll() {
       System.out.println("Should be executed at the end of the Test");
+   }
+
+   @Test
+   @DisplayName("Should not Create Contact Only on MAC OS")
+   @EnabledOnOs(value = OS.MAC, disabledReason = "Enabled only on MAC")
+   public void shouldCreateContactOnlyOnMAC() {
+      contactManager.addContact("John", "Doe", "0123456789");
+      Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+      Assertions.assertEquals(1,contactManager.getAllContacts().size());
+      Assertions.assertTrue(contactManager.getAllContacts().stream()
+              .filter(contact -> contact.getFirstName().equals("John") &&
+                      contact.getLastName().equals("Doe") &&
+                      contact.getPhoneNumber().equals("0123456789"))
+              .findAny()
+              .isPresent());
+
+   }
+
+
+   @Test
+   @DisplayName("Should not Create Contact Only on MAC OS")
+   @EnabledOnOs(value = OS.WINDOWS, disabledReason = "Enabled only on Windows OS")
+   public void shouldCreateContactOnlyOnWindows() {
+      contactManager.addContact("John", "Doe", "0123456789");
+      Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+      Assertions.assertEquals(1,contactManager.getAllContacts().size());
+      Assertions.assertTrue(contactManager.getAllContacts().stream()
+              .filter(contact -> contact.getFirstName().equals("John") &&
+                      contact.getLastName().equals("Doe") &&
+                      contact.getPhoneNumber().equals("0123456789"))
+              .findAny()
+              .isPresent());
+
    }
 }
