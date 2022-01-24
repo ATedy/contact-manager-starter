@@ -2,11 +2,13 @@ package com.programming.techie;
 
 import org.junit.jupiter.api.*;
 
+// By instanciating the test here we don't need to say static in the Before and AfterAll tests.
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ContactManagerTest {
    ContactManager contactManager;
 
    @BeforeAll
-   public static void setupAll() {
+   public void setupAll() {
       System.out.println("Should Print Before All Tests");
    }
 
@@ -58,4 +60,13 @@ class ContactManagerTest {
       }));
    }
 
+   @AfterEach
+   public void tearDown() {
+      System.out.println("Should Execute After Each Test");
+   }
+
+   @AfterAll
+   public void tearDownAll() {
+      System.out.println("Should be executed at the end of the Test");
+   }
 }
